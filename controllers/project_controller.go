@@ -39,7 +39,7 @@ import (
 type ProjectReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
-	Log    logr.Logger
+	Log    logr.Logger //TODO: Use logger
 }
 
 //+kubebuilder:rbac:groups=cache.my.domain,resources=projects,verbs=get;list;watch;create;update;patch;delete
@@ -61,8 +61,6 @@ type ProjectReconciler struct {
 func (r *ProjectReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	//log := r.Log.WithValues("helloworld", req.NamespacedName)
-	// TODO(user): your logic here
 	// Get the Project custom resource
 	var project cachev1alpha1.Project
 	if err := r.Client.Get(ctx, req.NamespacedName, &project); err != nil {
@@ -98,7 +96,6 @@ func (r *ProjectReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		},
 	}
 
-	// Set the owner reference of the Deployment object to the HelloWorld resource
 	if err := ctrl.SetControllerReference(&project, &deployment, r.Scheme); err != nil {
 		// Handle the error
 		return ctrl.Result{}, err
@@ -108,10 +105,8 @@ func (r *ProjectReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	foundDeployment := &appsv1.Deployment{}
 	err := r.Get(ctx, types.NamespacedName{Name: deployment.Name, Namespace: deployment.Namespace}, foundDeployment)
 	if err != nil && errors.IsNotFound(err) {
-		//log.Info("Creating a new Deployment", "Deployment.Namespace", deployment.Namespace, "Deployment.Name", deployment.Name)
 		err = r.Create(ctx, &deployment)
 		if err != nil {
-			//log.Error(err, "unable to create Deployment", "Deployment.Namespace", deployment.Namespace, "Deployment.Name", deployment.Name)
 			return ctrl.Result{}, err
 		}
 
@@ -124,10 +119,8 @@ func (r *ProjectReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	if !reflect.DeepEqual(deployment.Spec, foundDeployment.Spec) {
 		foundDeployment.Spec = deployment.Spec
-		//log.Info("Updating Deployment", "Deployment.Namespace", deployment.Namespace, "Deployment.Name", deployment.Name)
 		err = r.Update(ctx, foundDeployment)
 		if err != nil {
-			//log.Error(err, "unable to update Deployment", "Deployment.Namespace", deployment.Namespace, "Deployment.Name", deployment.Name)
 			return ctrl.Result{}, err
 		}
 	}
