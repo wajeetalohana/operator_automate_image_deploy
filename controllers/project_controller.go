@@ -134,30 +134,6 @@ func (r *ProjectReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	return ctrl.Result{}, nil
 
-	/*
-		// Check if the Deployment already exists
-		deployment := &appsv1.Deployment{}
-		err := r.Client.Get(ctx, client.ObjectKey{
-			Namespace: project.Namespace,
-			Name:      project.Name,
-		}, deployment)
-		if err == nil {
-			// Deployment already exists, do nothing
-			return ctrl.Result{}, nil
-		} else if !errors.IsNotFound(err) {
-			// Error occurred while getting Deployment, return error
-			return ctrl.Result{}, err
-		}
-		/*
-			fmt.Println("Path", os.Getenv("PATH"))
-			// Create the Deployment using kubectl command
-			cmd := exec.Command("kubectl", "apply", "-f", project.DepFile) // replace with the path to your deployment.yaml file
-			err = cmd.Run()
-			if err != nil {
-				// Error occurred while creating Deployment, return error
-				return ctrl.Result{}, err
-			}*/
-
 }
 
 // SetupWithManager sets up the controller with the Manager.
