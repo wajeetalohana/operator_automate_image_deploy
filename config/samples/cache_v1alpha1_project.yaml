@@ -1,0 +1,14 @@
+apiVersion: cache.my.domain/v1alpha1
+kind: Project
+metadata:
+  labels:
+    app.kubernetes.io/name: project
+    app.kubernetes.io/instance: project-sample
+    app.kubernetes.io/part-of: operator-automate-deploy
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator-automate-deploy
+  name: project-sample-2
+spec:
+  size: 3
+  image: "wajeeta/docker-hellow-world-new:latest"
+status: "QA"
